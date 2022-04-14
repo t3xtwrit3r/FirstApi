@@ -1,27 +1,44 @@
 package com.example.demo.student;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.Period;
 
+@Entity
+@Table
 public class Student {
-    int id;
-    String name;
-    String email;
-    LocalDate dob;
-    int age;
+    @Id
+    @SequenceGenerator(
+            name = "studentSequence",
+            sequenceName = "studentSequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "studentSequence"
+    )
+    private Long id;
+    private String name;
+    private String email;
+    private LocalDate dob;
+    @Transient
+    private Integer age;
 
-    public Student(int id, String name, String email, LocalDate dob, int age) {
-        this.id = id;
+    public Student(String name, String email, LocalDate dob) {
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
     }
 
-    public int getId() {
+    public Student() {
+
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -50,10 +67,11 @@ public class Student {
     }
 
     public int getAge() {
-        return age;
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(int age) {
         this.age = age;
     }
+
 }
